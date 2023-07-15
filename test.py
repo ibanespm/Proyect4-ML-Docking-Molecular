@@ -1,4 +1,4 @@
-
+import os
 import torch
 from torch import nn
 import numpy as np
@@ -12,8 +12,8 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print(device)
 
 class CNN(torch.nn.Module):
-  def _init_(self):
-    super(CNN,self)._init_()
+  def __init__(self):
+    super(CNN,self).__init__()
     self.layer1 =  nn.Sequential(
         nn.Conv1d(in_channels = 34 , out_channels = 128, kernel_size = 3, stride = 1, padding = 2),
         nn.ReLU(),
@@ -36,11 +36,13 @@ class CNN(torch.nn.Module):
     return output
 
 
-model2 = torch.load('model_.pth')
+model2 = torch.load('model_.pth') #Agregar , map_location=torch.device('cpu') si es necesario
 
 LIG1 = "O(CCOCCOC)CCOCCO"
+print("El ligando 1 es",LIG1)
 # LIG1 no se une al receptor 
 LIG2 = "O=C1NC2=C([C@@]13N4[C@@H](C[C@@H]3CC(=O)N5C/C(/C(=O)/C(/C5)=C/C=6C=7C(C=CC6)=CC=CC7)=C\C=8C=9C(C=CC8)=CC=CC9)CCC4)C=CC=C2"
+print("El ligando 2 es",LIG2)
 # LIG1 se une al receptor 
 d = {'smiles':[LIG1, LIG2]}
 smalldf = pd.DataFrame(data=d)
@@ -75,4 +77,5 @@ predicted =   model2(x_val)
 predicted = predicted.cpu()
 
 predictions_label = [1 if predicted[i] >= 0.5 else 0 for i in range(len(predicted))]
-print(predictions_label)
+print(predictions_label) #Los datos obtenidos son iguales a los realizados con el modelo original
+print("Los valores obtenidos deberían ser [0,1]")
