@@ -1,4 +1,5 @@
 import os
+import numpy as np 
 import torch
 from torch import nn
 import numpy as np
@@ -10,6 +11,9 @@ converter = deepsmiles.Converter(rings=True, branches=True)
 cuda0 = torch.device('cuda:0')
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print(device)
+
+
+
 
 class CNN(torch.nn.Module):
   def __init__(self):
@@ -34,6 +38,8 @@ class CNN(torch.nn.Module):
     out = out.reshape(out.size(0), -1)
     output = self.fc(out)
     return output
+
+
 
 
 model2 = torch.load('model_.pth') #Agregar , map_location=torch.device('cpu') si es necesario
